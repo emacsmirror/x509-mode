@@ -781,8 +781,7 @@ Switch to resulting buffer and return it."
     ("pkcs7" 'x509--viewpkcs7-history)
     ("dhparam" 'x509--viewdh-history)
     ("ecparam" 'x509--viewec-history)
-    ("pkey"
-     (if (string-match-p "-pubin" args)
+    ("pkey" (if (string-match-p "-pubin" args)
          'x509--viewpublickey-history
        'x509--viewkey-history))
     ("asn1parse" 'x509--viewasn1-history)
@@ -1049,13 +1048,13 @@ Intended to be called in a `x509-mode' or `x509-asn1-mode' buffer."
   (interactive)
   (x509--dwim-next-or-prev 'prev))
 
-(defun x509--dwim-tester (openssl-commamd-args)
-  "Test running OPENSSL-COMMAMD-ARGS in current buffer.
+(defun x509--dwim-tester (openssl-command-args)
+  "Test running OPENSSL-COMMAND-ARGS in current buffer.
 Return t if return status is 0, otherwise nil.  Use to determine
 if the buffer contains data of certain type."
   (let* ((in-buf (x509--generate-input-buffer))
          (encoding (x509--buffer-encoding in-buf))
-         (args (x509--add-inform-spec openssl-commamd-args encoding))
+         (args (x509--add-inform-spec openssl-command-args encoding))
          ;; Arguments to `call-process-region'. Just run the command and
          ;; discard the output.
          (proc-args
@@ -1465,7 +1464,7 @@ Used to display hexl buffer in `x509-asn1-mode'."
             (goto-char point)
             (recenter))))))
 
-(defun x509-asn1--byte-offet-stripes (start-byte end-byte)
+(defun x509-asn1--byte-offset-stripes (start-byte end-byte)
   "Construct stripes of bytes mod 16.
 
 Starting from START-BYTE and ending before END-BYTE."
@@ -1485,7 +1484,7 @@ Starting from START-BYTE and ending before END-BYTE.
 
 One set of stripes cover the hex bytes and one set cover the
 characters in the rightmost column."
-  (let ((byte-ranges (x509-asn1--byte-offet-stripes start-byte end-byte)))
+  (let ((byte-ranges (x509-asn1--byte-offset-stripes start-byte end-byte)))
     (append
      (nreverse
       (cl-mapcar
